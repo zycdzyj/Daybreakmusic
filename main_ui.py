@@ -263,6 +263,7 @@ class Ui_Daybreak_music(object):
         self.textEdit = QTextEdit(self.tab_5)
         self.textEdit.setObjectName(u"textEdit")
         self.textEdit.setGeometry(QRect(320, 60, 451, 421))
+        self.textEdit.setReadOnly(True)
         self.label_qq = QLabel(self.tab_5)
         self.label_qq.setObjectName(u"label_qq")
         self.label_qq.setGeometry(QRect(80, 300, 31, 31))
@@ -283,7 +284,7 @@ class Ui_Daybreak_music(object):
 
         self.retranslateUi(Daybreak_music)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(2)
         self.tabWidget_2.setCurrentIndex(1)
 
 
