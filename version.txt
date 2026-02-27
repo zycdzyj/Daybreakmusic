@@ -1,0 +1,30 @@
+# UTF-8
+VSVersionInfo(
+  ffi=FixedFileInfo(
+    filevers=(1, 5, 0, 0),        # 文件版本号
+    prodvers=(1, 5, 0, 0),        # 产品版本号
+    mask=0x3f,
+    flags=0x0,
+    OS=0x4,                       # Windows
+    fileType=0x1,                 # 应用程序
+    subtype=0x0,
+    date=(0, 0)
+  ),
+  kids=[
+    StringFileInfo(
+      [
+        StringTable(
+          u'040904B0',
+          [StringStruct(u'CompanyName', u'破晓音乐'),
+           StringStruct(u'FileDescription', u'Daybreakmusic_破晓音乐'),
+           StringStruct(u'FileVersion', u'1.5.0.0'),
+           StringStruct(u'InternalName', u'Daybreakmusic'),
+           StringStruct(u'LegalCopyright', u'© 2026 破晓音乐工作室. 保留所有权利.'),
+           StringStruct(u'OriginalFilename', u'Daybreakmusic_破晓音乐&Alpha 1.50.exe'),
+           StringStruct(u'ProductName', u'Daybreakmusic_破晓音乐&Alpha 1.50'),
+           StringStruct(u'ProductVersion', u'1.5.0.0'),
+           StringStruct(u'Author', u'Daybreak_破晓&qq:3969204597 ')])
+      ]), 
+    VarFileInfo([VarStruct(u'Translation', [1033, 1200])])
+  ]
+)

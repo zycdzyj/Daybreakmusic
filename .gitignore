@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+.env
+.DS_Store
+
+# 打包生成的文件 (不要上传 exe，exe 去 Releases 上传)
+dist/
+build/
+*.exe
+*.spec
+
+# IDE
+.vscode/
+.idea/

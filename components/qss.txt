@@ -1,0 +1,112 @@
+QWidget {
+    color: #E2E8F0;
+    background-color: #1E293B;
+    border-radius: 8px;
+    padding: 8px;
+    border: 1px solid rgba(255, 255, 255, 50);
+}
+
+
+QPushButton {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #6366F1, stop:1 #8B5CF6);
+    border: none;
+    border-radius: 8px;
+    color: #FFFFFF;
+    padding: 8px 16px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                stop:0 #818CF8, stop:1 #A78BFA);
+}
+
+QTableWidget {
+    background-color: #1E293B;
+    color: #E2E8F0;
+    border: 1px solid #334155;
+    selection-background-color: #6366F1;
+}
+
+QSlider::sub-page:horizontal {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                stop:0 #6366F1, stop:1 #8B5CF6);
+}
+QLineEdit {
+    /* 背景色 - 灰色 */
+    background-color: #f5f5f5;
+    
+    /* 边框 */
+    border: 1px solid #d0d0d0;
+    border-radius: 6px;
+    
+    /* 内边距 */
+    padding: 8px 12px;
+    
+    /* 文字颜色 */
+    color: #333333;
+    
+    /* 字体 */
+    font-size: 14px;
+    font-family: "Microsoft YaHei", "Segoe UI", sans-serif;
+    
+    /* 选中背景色 */
+    selection-background-color: #0078d7;
+    selection-color: #ffffff;
+}
+
+/* ---------- 聚焦状态 ---------- */
+QLineEdit:focus {
+    /* 聚焦时边框颜色加深 */
+    border: 1px solid #0078d7;
+    background-color: #ffffff;
+    
+    /* 可选：添加阴影效果 */
+    /* 注意：Qt 不支持 box-shadow，可通过边框模拟 */
+}
+
+/* ---------- 悬停状态 ---------- */
+QLineEdit:hover {
+    border: 1px solid #a0a0a0;
+    background-color: #fafafa;
+}
+QTextEdit {
+    background-color: transparent;
+    border: 0px;
+    border-radius: 0px;
+    padding: 8px;
+    color: white;
+    selection-background-color: #0078d7;
+    selection-color: #ffffff;
+}
+
+/* 获取焦点时的样式 */
+QTextEdit:focus {
+    border: 0px;
+    outline: none;
+    background-color: transparent;
+}
+
+/* 禁用状态 */
+QTextEdit:disabled {
+    background-color: transparent;
+    color: #999999;
+}
+
+/* 只读状态 */
+QTextEdit:read-only {
+    background-color: transparent;
+    color: #666666;
+}
+
+/* 隐藏垂直滚动条 */
+QTextEdit QScrollBar:vertical {
+    width: 0px;
+    background: transparent;
+}
+
+/* 隐藏水平滚动条 */
+QTextEdit QScrollBar:horizontal {
+    height: 0px;
+    background: transparent;
+}
