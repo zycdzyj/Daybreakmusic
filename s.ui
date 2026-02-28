@@ -26,7 +26,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>2</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="tab">
     <attribute name="title">
@@ -972,6 +972,19 @@ p, li { white-space: pre-wrap; }
        </property>
        <property name="text">
         <string>3969204597</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_picture_zycdzyj_qr_code">
+       <property name="geometry">
+        <rect>
+         <x>100</x>
+         <y>350</y>
+         <width>131</width>
+         <height>131</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>图片</string>
        </property>
       </widget>
      </widget>

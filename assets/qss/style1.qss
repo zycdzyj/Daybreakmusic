@@ -609,6 +609,10 @@ QSplitter::handle:vertical {
 QSplitter::handle:hover {
     background-color: #6366F1;
 }
+#IconOnlyBtn {
+    icon-size: 40px 40px;
+}
+
 
 
 # ========== 应用样式示例 ==========

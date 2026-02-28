@@ -92,6 +92,62 @@ print(f'MUSIC_U_COOKIE: {music_u_cookie}')
 
 pool = QThreadPool.globalInstance()
 pool.setMaxThreadCount(5)  # 设置最大线程数（根据需要调整）
+class FadeAnimationMixin:
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # 确保窗口支持透明度
+        self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground, False) 
+        # 注意：WA_TranslucentBackground 通常用于无边框窗口做复杂透明效果。
+        # 对于普通有边框窗口，我们直接操作 windowOpacity 即可，不需要开启 WA_TranslucentBackground
+        # 但为了保险起见，如果是有边框窗口，不要开启 WA_TranslucentBackground，否则边框可能消失或异常
+        
+        self._fade_animation = None
+
+    def fade_in(self, duration=400, start_opacity=0.0, end_opacity=1.0, easing_curve=QEasingCurve.Type.InOutQuad):
+        """
+        执行淡入动画
+        :param duration: 动画持续时间 (毫秒)
+        :param start_opacity: 起始透明度 (0.0 - 1.0)
+        :param end_opacity: 结束透明度 (0.0 - 1.0)
+        :param easing_curve: 缓动曲线
+        """
+        if self._fade_animation:
+            self._fade_animation.stop()
+
+        self._fade_animation = QPropertyAnimation(self, b"windowOpacity")
+        self._fade_animation.setDuration(duration)
+        self._fade_animation.setStartValue(start_opacity)
+        self._fade_animation.setEndValue(end_opacity)
+        self._fade_animation.setEasingCurve(easing_curve)
+        
+        # 在动画开始前确保窗口是显示的且透明度为起始值
+        self.setWindowOpacity(start_opacity)
+        self.show()
+        
+        self._fade_animation.start()
+
+    def fade_out(self, duration=400, end_opacity=0.0, on_finished=None):
+        # 1. 如果有旧动画，先停止（防止冲突）
+        if hasattr(self, '_fade_animation') and self._fade_animation:
+            self._fade_animation.stop()
+
+        # 2. 【关键】创建新动画并赋值给 self._fade_animation
+        # 必须保存在 self 下，防止被 Python 垃圾回收机制清理掉
+        self._fade_animation = QPropertyAnimation(self, b"windowOpacity")
+
+        self._fade_animation.setDuration(duration)
+        self._fade_animation.setStartValue(self.windowOpacity())
+        self._fade_animation.setEndValue(end_opacity)
+        self._fade_animation.setEasingCurve(QEasingCurve.Type.InOutQuad)
+
+        # 3. 连接信号
+        if on_finished:
+            # 使用 lambda 或者直接连接，确保上下文正确
+            self._fade_animation.finished.connect(on_finished)
+
+        # 4. 启动
+        self._fade_animation.start()
+    
 
 class WorkerSignals(QObject):
     finished = Signal(str, float)
@@ -526,7 +582,7 @@ class LyricWindow(QWidget):
         self.update_lyric(current_lyric)
 
 
-class MusicPlayerDialog(QDialog, Ui_Daybreak_music):
+class MusicPlayerDialog(QDialog, Ui_Daybreak_music,FadeAnimationMixin):
     def __init__(self, folderpath=""):
         super().__init__()
         self.setupUi(self)
@@ -672,6 +728,15 @@ class MusicPlayerDialog(QDialog, Ui_Daybreak_music):
         self.pushButton_playmusic.setIcon(
             self.style().standardIcon(QStyle.StandardPixmap.SP_MediaPlay)
         )
+        self.pushButton_playmusic_2.setIcon(
+            self.style().standardIcon(QStyle.StandardPixmap.SP_MediaPlay)
+        )
+        self.pushButton_playmusic_2.setObjectName("IconOnlyBtn")
+        self.pushButton_playmusic.setObjectName("IconOnlyBtn")
+        self.pushButton_beforesong.setObjectName("IconOnlyBtn")
+        self.pushButton_beforesong_2.setObjectName("IconOnlyBtn")
+        self.pushButton_nextsong.setObjectName("IconOnlyBtn")
+        self.pushButton_nextsong_2.setObjectName("IconOnlyBtn")
 
         self.pushButton_localmusicsearch.clicked.connect(
             lambda: self.tabWidget.setCurrentWidget(self.tab)
@@ -690,7 +755,13 @@ class MusicPlayerDialog(QDialog, Ui_Daybreak_music):
         self.pushButton_tab_music_settings_2.clicked.connect(lambda:self.tabWidget_2.setCurrentWidget(self.tab_4))
         self.pushButton_information_2.clicked.connect(lambda:self.tabWidget_2.setCurrentWidget(self.tab_5))
         self.lineEdit_163_usercookie.setEnabled(False)
-        
+        self.pushButton_beforesong.setText('')
+        self.pushButton_beforesong_2.setText('')
+        self.pushButton.setText('')
+        self.pushButton_nextsong.setText('')
+        self.pushButton_nextsong_2.setText('')
+        self.pushButton_playmusic.setText('')
+        self.pushButton_playmusic_2.setText('')
         self.lineEdit_163keywords.returnPressed.connect(self.search_music)
         self.onlinesearch_tablewidget.doubleClicked.connect(self.playmusic_online)
         self.pushButton_settings.clicked.connect(lambda:self.tabWidget.setCurrentWidget(self.tab_3))
@@ -701,7 +772,8 @@ class MusicPlayerDialog(QDialog, Ui_Daybreak_music):
         self.tabWidget.tabBar().hide()  # 隐藏外层 tabWidget 的标签页
         self.pushButton_settings_addcookie.clicked.connect(self.open_addcookie_dialog)
         self.lineEdit_163_usercookie.setText(music_u_cookie)
-        
+        self.chatdialog.setObjectName("chatdialog")
+        self.chatdialog_deletecache.setObjectName("chatdialog_2")
         self.label_pictureload_2.setText("")
         self.label_pictureload.setText("")
         self.label_window_title_bar.setAttribute(Qt.WidgetAttribute.WA_Hover)
@@ -722,7 +794,8 @@ class MusicPlayerDialog(QDialog, Ui_Daybreak_music):
         except:
             target=0
 
-        
+
+
 
         if 0 <= target < count:
             self.comboBox_playmode_qssload.setCurrentIndex(target)
@@ -731,9 +804,20 @@ class MusicPlayerDialog(QDialog, Ui_Daybreak_music):
             print(f"设置失败！索引 {target} 超出范围 [0, {count-1}]")
         self.comboBox_playmode_qssload.currentIndexChanged.connect(self.read_gobal_qss)
         self.read_gobal_qss()
+        self._fade_animation = None 
+        self.show_event_handler()
 
 
-
+    def show_event_handler(self):
+        # 例如：窗口显示时淡入
+        self.fade_in()
+    def fade_out_and_close(self):
+        """
+        执行淡出逻辑：播放动画 -> 动画结束 -> 真正关闭
+        """
+        # 使用之前定义的 fade_out 方法
+        # 关键点：on_finished=self.close 确保动画播完才关窗口
+        self.fade_out(duration=400, on_finished=self.close)
 
     def read_gobal_qss(self):
 
@@ -793,12 +877,14 @@ class MusicPlayerDialog(QDialog, Ui_Daybreak_music):
         if get_bundle_dir() !=None:
             picture_zycdzyj_path=get_resource_path("assets/icon/zycdzyj.jpg")
             picture_qq_path=get_resource_path("assets/icon/qq.png")
+            picture_qr_path=get_resource_path("assets/icon/qr.jpg")
             print(picture_zycdzyj_path)
 
         else:
             root_dir=Path(get_script_dir())
             picture_zycdzyj_path=root_dir / 'assets' / 'icon' / 'zycdzyj.jpg'
             picture_qq_path=root_dir / 'assets' / 'icon' / 'qq.png'
+            picture_qr_path=root_dir / 'assets' / 'icon' / 'qr.jpg'
             print(picture_zycdzyj_path)
 
         picture_zycdzyj=QPixmap(picture_zycdzyj_path)
@@ -809,6 +895,9 @@ class MusicPlayerDialog(QDialog, Ui_Daybreak_music):
         self.label_picture_zycdzyj.setScaledContents(True)
         font = QFont("Microsoft YaHei", 14)
         self.textEdit.setFont(font)
+        picture_qr=QPixmap(picture_qr_path)
+        self.label_picture_zycdzyj_qr_code.setPixmap(picture_qr)
+        self.label_picture_zycdzyj_qr_code.setScaledContents(True)
 
 
 
@@ -845,6 +934,8 @@ class MusicPlayerDialog(QDialog, Ui_Daybreak_music):
         print(f"缓存已清除: {filename}")
         self.pushButton_reloadonlinemusic.setEnabled(True)
         self.playmusic_online()
+
+
     def keyPressEvent(self, event):
         # 拦截 ESC 键
         if event.key() == Qt.Key_Escape:
@@ -861,7 +952,7 @@ class MusicPlayerDialog(QDialog, Ui_Daybreak_music):
                 self.showMinimized()
             else:
                 if self.label_close_window.underMouse() or self.label_close_window_2.underMouse() or self.label_close_window_3.underMouse():
-                    self.close()
+                    self.fade_out_and_close()
         return super().mousePressEvent(event)
     def mouseMoveEvent(self, event):
         if hasattr(self, '_dragging') and self._dragging:
@@ -870,42 +961,60 @@ class MusicPlayerDialog(QDialog, Ui_Daybreak_music):
     def mouseReleaseEvent(self, event):
         if event.button() == Qt.LeftButton:
             self._dragging = False
-            global_pos = event.globalPosition().toPoint()
-            target_process = None 
-            if self.horizontalSlider_processbar.underMouse():
-                target_process=self.horizontalSlider_processbar
-                
-            elif self.horizontalSlider_processbar_2.underMouse():
-                target_process=self.horizontalSlider_processbar_2
 
-            if target_process:
-                local_pos = target_process.mapFromGlobal(global_pos)
+
+            global_pos = event.globalPosition().toPoint()
+
+            target_slider = None
+
+
+            sliders_to_check = [
+                self.horizontalSlider_processbar,
+                self.horizontalSlider_processbar_2
+            ]
+
+
+            for slider in sliders_to_check:
+                if not slider.isVisible() or not slider.isEnabled():
+                    continue
+                    
+
+                slider_global_rect = QRect(slider.mapToGlobal(slider.rect().topLeft()), slider.size())
+
+
+                tolerance_rect = slider_global_rect.adjusted(0, -10, 0, 10)
+
+                if tolerance_rect.contains(global_pos):
+                    target_slider = slider
+                    break
+        
+            if target_slider:
+
+                local_pos = target_slider.mapFromGlobal(global_pos)
                 mouse_x = local_pos.x()
-                
-                width = target_process.width()
-                tolerance = 20
-                if mouse_x < -tolerance or mouse_x > width + tolerance:
+
+                width = target_slider.width()
+
+
+                if width <= 0:
                     super().mouseReleaseEvent(event)
                     return
-                clamped_x = max(0, min(width, mouse_x))
 
-                if width > 0:
-                    current_percent = clamped_x / width
-                    current_percent = max(0.0, min(1.0, current_percent))
-                    duration = self.player.duration()
-                    if duration > 0:
-                        target_position = int(duration * current_percent)
-                        self.player.setPosition(target_position)
-                # mouse_x = event.position().x() 
-                # try:
-                #     current_percent=mouse_x / self.horizontalSlider_processbar.width()
-                # except:
-                #     current_percent=mouse_x / self.horizontalSlider_processbar_2.width()
-                # if current_percent is not None:
-                #     duration = self.player.duration()
-                #     target_position = int(duration * current_percent)
-                #     self.player.setPosition(target_position)
-                #     print("debug")
+                clamped_x = max(0, min(width, mouse_x))
+                current_percent = clamped_x / width
+
+                duration = self.player.duration()
+                if duration > 0:
+                    target_position = int(duration * current_percent)
+
+                    # 可选：限制在 0 到 duration 之间
+                    target_position = max(0, min(duration, target_position))
+
+                    self.player.setPosition(target_position)
+
+
+                event.accept()
+                return
 
 
 
@@ -1595,10 +1704,6 @@ class MusicPlayerDialog(QDialog, Ui_Daybreak_music):
             self.lyric_window.show()
         else:
             self.lyric_window.hide()
-            # self.listWidget.setCurrentRow(self.listWidget.currentRow()+1)
-            # url = QUrl.fromLocalFile(self.rightfolderpath[self.listWidget.currentRow()])
-            # self.player.setSource(url)
-            # self.player.play()
 
 
 class lrcchange(QThread):

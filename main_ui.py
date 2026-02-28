@@ -270,6 +270,9 @@ class Ui_Daybreak_music(object):
         self.label_9 = QLabel(self.tab_5)
         self.label_9.setObjectName(u"label_9")
         self.label_9.setGeometry(QRect(120, 300, 91, 31))
+        self.label_picture_zycdzyj_qr_code = QLabel(self.tab_5)
+        self.label_picture_zycdzyj_qr_code.setObjectName(u"label_picture_zycdzyj_qr_code")
+        self.label_picture_zycdzyj_qr_code.setGeometry(QRect(100, 350, 131, 131))
         self.tabWidget_2.addTab(self.tab_5, "")
         self.label_window_title_bar_2 = QLabel(self.tab_3)
         self.label_window_title_bar_2.setObjectName(u"label_window_title_bar_2")
@@ -284,7 +287,7 @@ class Ui_Daybreak_music(object):
 
         self.retranslateUi(Daybreak_music)
 
-        self.tabWidget.setCurrentIndex(2)
+        self.tabWidget.setCurrentIndex(0)
         self.tabWidget_2.setCurrentIndex(1)
 
 
@@ -392,6 +395,7 @@ class Ui_Daybreak_music(object):
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; line-height:150%;\"><span style=\" font-family:'Microsoft YaHei','SimHei','sans-serif'; font-size:14px; color:#ff79c6;\">\u559c\u6b22\u5973\u751f</span></p></body></html>", None))
         self.label_qq.setText(QCoreApplication.translate("Daybreak_music", u"QQ", None))
         self.label_9.setText(QCoreApplication.translate("Daybreak_music", u"3969204597", None))
+        self.label_picture_zycdzyj_qr_code.setText(QCoreApplication.translate("Daybreak_music", u"\u56fe\u7247", None))
         self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.tab_5), QCoreApplication.translate("Daybreak_music", u"Tab 2", None))
         self.label_window_title_bar_2.setText(QCoreApplication.translate("Daybreak_music", u"Daybreakmusic_\u7834\u6653\u97f3\u4e50", None))
         self.label_close_window_3.setText(QCoreApplication.translate("Daybreak_music", u"\u00d7", None))

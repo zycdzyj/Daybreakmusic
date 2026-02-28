@@ -6,6 +6,7 @@
     background-color: transparent; 
 }
 
+
 /* ========== 标签样式 (Label) ========== */
 QLabel {
     background: transparent;
@@ -78,7 +79,7 @@ QLineEdit:disabled {
 /* ========== 表格与列表视图 ========== */
 QTableWidget, QTreeWidget, QListWidget, QAbstractItemView {
     background-color: rgba(255, 255, 255, 0.5); 
-    color: #E2E8F0;
+    color: #ff4f4f;
     border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 8px;
     gridline-color: rgba(255, 255, 255, 0.2);
@@ -95,7 +96,7 @@ QTableWidget::item, QTreeWidget::item, QListWidget::item {
 
 QTableWidget::item:selected, QTreeWidget::item:selected, QListWidget::item:selected {
     background-color: #ff6f56;
-    color: #FFFFFF;
+    color: #ffffff;
     font-weight: bold;
 }
 
@@ -460,3 +461,8 @@ QTextEdit QScrollBar:horizontal {
     height: 0px;
     background: transparent;
 }
+#IconOnlyBtn {
+    icon-size: 40px 40px;
+}
+
+
